@@ -165,6 +165,8 @@ steps:
             # check if commit from JOB_NUM is an ancestor of $CIRCLE_SHA1
             git merge-base --is-ancestor $COMMIT_FROM_JOB_NUM $CIRCLE_SHA1 || { RETURN_CODE=$?; }
 
+            echo "COMMIT_FROM_JOB_NUM= $COMMIT_FROM_JOB_NUM"
+            echo "CIRCLE_SHA1= $CIRCLE_SHA1"
             echo "RETURN_CODE= $RETURN_CODE"
             if [[ $RETURN_CODE > 0 ]]; then
               echo "----------------------------------------------------------------------------------------------------"
