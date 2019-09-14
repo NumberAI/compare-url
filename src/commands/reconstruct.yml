@@ -84,10 +84,12 @@ steps:
           # loop through each job to compare commit hashes
           while read line
           do
+            echo "SAME_VCS_REVISION_COUNTER= $SAME_VCS_REVISION_COUNTER"
             if [[ $(curl --user $<<parameters.circle-token>>: $line | grep "\"vcs_revision\" : \"$CIRCLE_SHA1\"") ]]; then
               SAME_VCS_REVISION_COUNTER=$(( $SAME_VCS_REVISION_COUNTER + 1 ))
               continue
             elif [[ $SAME_VCS_REVISION_COUNTER > 1 ]]; then
+              echo "SAME_VCS_REVISION_COUNTER is more than 1"
               break
             else
               BRANCH_IS_NEW=false
