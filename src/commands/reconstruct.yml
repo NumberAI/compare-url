@@ -77,11 +77,18 @@ steps:
             sed -E 's/"|,//g' | sed -E 's/ //g' \
             > API_ENDPOINTS_FOR_JOBS_ON_BRANCH
 
+          # when this counter reach > 1
+          # assume as a new branch or a branch that got a `force-pushed`
+          local SAME_VCS_REVISION_COUNTER=0
+            
           # loop through each job to compare commit hashes
           while read line
           do
             if [[ $(curl --user $<<parameters.circle-token>>: $line | grep "\"vcs_revision\" : \"$CIRCLE_SHA1\"") ]]; then
+              SAME_VCS_REVISION_COUNTER=$(( $SAME_VCS_REVISION_COUNTER + 1 ))
               continue
+            elif [[ $SAME_VCS_REVISION_COUNTER > 1 ]]; then
+              break
             else
               BRANCH_IS_NEW=false
               break
